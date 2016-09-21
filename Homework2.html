@@ -1,0 +1,41 @@
+<html>
+<head>
+  <script src="https://cloudboost.io/js-sdk/cloudboost.min.js"></script>
+  <title></title>
+</head>
+<body>
+  <script>
+    class Product{
+      constructor(object){
+        this.product = object
+      }
+      save(){
+        this.product.save({
+          success:(obj) =>{
+            console.log(obj);
+          },
+          error:(err) =>{
+            console.log(err);
+          }
+        });
+      }
+      delete(){
+        this.product.delete({
+          success:(obj) =>{
+            console.log(obj);
+          },
+          error:(err) =>{
+            console.log(err);
+          }
+        });
+      }
+    }
+
+    class Store{
+      listAllProducts(){
+
+      }
+    }
+  </script>
+</body>
+</html>
