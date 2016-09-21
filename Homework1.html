@@ -42,7 +42,7 @@
   <button class="btn btn-default" onclick="submit()">Submit</button>
   <table id="productTable" class="table"></table>
   <script>
-    var allProducts = [];
+    const allProducts = [];
 
     class Product{
       constructor(name, price, tags, stores) {
@@ -52,7 +52,7 @@
         this.stores = stores;
       }
       addToTable(){
-        $("#productTable").append("<tr><td>" + this.name + "</td><td>" + this.price + "</td><td>" + this.tags + "</td><td>" + this.stores + "</td></tr>");
+        $("#productTable").append("<tr><td>" + this.name + "</td><td>" + this.price + "</td><td>" + this.tags.join(", ") + "</td><td>" + this.stores.join(", ") + "</td></tr>");
       }
     }
     var tagCheckboxes = [$("#dairyTagCheckbox"), $("#wheatTagCheckbox"), $("#coldCutsTagCheckbox"), $("#fruitsAndVegetablesTagCheckbox")];
@@ -75,8 +75,8 @@
         let data = {
           "name":$("#nameInput").val(),
           "price":$("#priceInput").val(),
-          "tags": "" + tags + "",
-          "stores": "" + stores + ""
+          "tags": tags.join(", "),
+          "stores": stores.join(", ")
         }
         console.log(data);
         parseRawProductData(data);
@@ -111,7 +111,7 @@
     }
 
     function parseRawProductData(data){
-      let newProduct = new Product(data.name, data.price, data.tags.split(','), data.stores.split(','));
+      let newProduct = new Product(data.name, data.price, data.tags.split(', '), data.stores.split(', '));
       allProducts.push(newProduct);
       newProduct.addToTable();
     }
