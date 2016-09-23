@@ -1,41 +1,132 @@
 <html>
 <head>
   <script src="https://cloudboost.io/js-sdk/cloudboost.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
   <title></title>
+  <style>
+    .form-box{
+      border-style: solid;
+      border-width: 2px;
+      margin-left: 30px;
+      padding: 30px;
+      width: 250px;
+    }
+  </style>
 </head>
 <body>
+  <div class="form-box">
+    <h1>Create Product</h1>
+    Name: <input id="name-input"></input><br>
+    Price: <input id="price-input"></input>
+    <div>
+      <h3>Stores:</h3>
+      <input type="checkbox" id="Walmart" name="Walmart"/> Walmart <br>
+      <input type="checkbox" id="Target" name="Target"/> Target <br>
+      <input type="checkbox" id="Staples" name="Staples"/> Staples <br>
+    </div><br>
+    <button onclick="createNewProduct()">Submit</button>
+  </div>
+  <h2>Walmart</h2>
+  <ul id="WalmartList"></ul><br>
+  <h2>Target</h2>
+  <ul id="TargetList"></ul><br>
+  <h2>Staples</h2>
+  <ul id="StaplesList"></ul><br>
   <script>
+    CB.CloudApp.init("hbyttcwntugz", "e4e91c52-fd9d-4ab0-9d44-3659c5ccbf0f");
+
     class Product{
-      constructor(object){
-        this.product = object
+      constructor(name, price){
+        this.name = name;
+        this.price = price;
       }
-      save(){
-        this.product.save({
-          success:(obj) =>{
-            console.log(obj);
-          },
-          error:(err) =>{
-            console.log(err);
-          }
-        });
-      }
-      delete(){
-        this.product.delete({
-          success:(obj) =>{
-            console.log(obj);
-          },
-          error:(err) =>{
-            console.log(err);
-          }
-        });
+      getListItem(){
+        return "<li>" + this.name + ": $" + this.price + "</li>"
       }
     }
 
     class Store{
+      constructor(storeName){
+        this.name = storeName;
+        this.products = [];
+      }
       listAllProducts(){
-
+        return this.products;
+      }
+      addProduct(product){
+        this.products.push(product);
+      }
+      updateList(){
+        $("#" + this.name + "List").empty();
+        for(let product of this.products){
+          $("#" + this.name + "List").append(product.getListItem());
+        }
       }
     }
+
+    const stores = {};
+    const storeNames = ["Walmart", "Target", "Staples"];
+
+    for(let name of storeNames){
+      const store = new Store(name);
+      stores[name] = store;
+    }
+
+    function createNewProduct(){
+      if (getCheckedStores().length != 0){
+        const newProduct = new CB.CloudObject("Product");
+        newProduct.set("name", $("#name-input").val());
+        newProduct.set("price", parseFloat($("#price-input").val()));
+        newProduct.set("stores", getCheckedStores());
+        newProduct.save({
+          success: function(newProduct) {
+            const myProduct = new Product(newProduct.document.name, newProduct.document.price);
+            for(let storeName of newProduct.document.stores){
+              console.log(storeName);
+              stores[storeName].addProduct(myProduct);
+              stores[storeName].updateList();
+            }
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        });
+      }
+    }
+
+    function getData(){
+      var query = new CB.CloudQuery("Product");
+      query.find({
+        success: function(list){
+          for(let product of list){
+            const newProduct = new Product(product.document.name, product.document.price);
+            for(let storeName in product.document.stores){
+              const myProduct = new Product(product.document.name, product.document.price);
+              stores[product.document.stores[storeName]].addProduct(myProduct);
+              console.log(myProduct);
+            }
+          }
+        for(let storeName of storeNames){
+          stores[storeName].updateList();
+          console.log(stores[storeName]);
+        }
+        },
+        error: function(err) {
+          //Error in retrieving the data.
+        }
+      });
+    }
+
+    function getCheckedStores(){
+      const checkedStores = [];
+      for(let storeName of storeNames){
+        if ($("#" + storeName).is(":checked")){
+          checkedStores.push(storeName);
+        }
+      }
+      return checkedStores;
+    }
+    getData();
   </script>
 </body>
 </html>
