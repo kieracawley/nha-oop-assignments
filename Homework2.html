@@ -36,12 +36,13 @@
     CB.CloudApp.init("hbyttcwntugz", "e4e91c52-fd9d-4ab0-9d44-3659c5ccbf0f");
 
     class Product{
-      constructor(name, price){
-        this.name = name;
-        this.price = price;
+      constructor(params){
+        this._cloudBoostObject = params
+        this._name = params.document.name;
+        this._price = price;
       }
       getListItem(){
-        return "<li>" + this.name + ": $" + this.price + "</li>"
+        return `<li>${this.name}: $${this.price}</li>`
       }
     }
 
@@ -57,9 +58,9 @@
         this.products.push(product);
       }
       updateList(){
-        $("#" + this.name + "List").empty();
+        $(`#${this.name}List`).empty();
         for(let product of this.products){
-          $("#" + this.name + "List").append(product.getListItem());
+          $(`#${this.name}List`).append(product.getListItem());
         }
       }
     }
@@ -120,7 +121,7 @@
     function getCheckedStores(){
       const checkedStores = [];
       for(let storeName of storeNames){
-        if ($("#" + storeName).is(":checked")){
+        if ($(`#${storeName}`).is(":checked")){
           checkedStores.push(storeName);
         }
       }
