@@ -1,7 +1,7 @@
 class Product{
 	constructor(params){
-		this.id = params.document.id;
-		this._name = params.name;
+		this.id = params.id;
+		this._name = params.document.name;
 		this._cost_in_cents = params.document.cost_in_cents;
 		this._image_url = params.document.image_url;
 		this.cloudboost_object = params;

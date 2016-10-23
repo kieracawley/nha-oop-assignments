@@ -1,12 +1,12 @@
 class Store{
-  constructor(params){
+  constructor(params, products){
 	  this.id = params.id;
 	  this._name = params.document.name;
 	  this._image_url = params.document.image_url;
 	  this._is_open = params.document.is_opened
 	  this.cloudboost_object = params;
+    this._products = products;
   }
-
 	save(){
 		this._cloudboost_object.save({
 			success: function(store) {
@@ -14,11 +14,6 @@ class Store{
       error: function(err) {
       }
 		});
-	}
-
-	get products(){
-		var query = new CB.CloudQuery("ProductStore");
-		query.equalTo('store_id', this.cloudboost_object);
 	}
 
 	get name(){
@@ -54,13 +49,12 @@ class Store{
 		}
 	}
 	getListItem(){
-		const trueFalseToWords = {true: "Open", false: "Closed"}
-		const headerImage = "<img src='" + this._image_url + "'>";
-		const information = "<span style='font-size:30px;'><b>Store Name: </b>" + this._name + "</span><br><br> <span style='font-size:30px;'><b>Store Status: </b>" + trueFalseToWords[this._is_open] + "</span>"
-		const section1 = "<div class='storeInfo'>"  + headerImage + "<br><br><br>" + information + "</div>"
-    let cloudObjectManager = new CloudObjectManager();
-    let products = cloudObjectManager.findProductsInStore(this.cloudboost_object);
-    console.log(products);
-    return "<div class='jumbotron store-jumbotron'>" + section1 + "</div></div>";
+    const visualManager = new ObjectVisualManager();
+    const section1 = visualManager.getStoreSummary(this._name, this._image_url, this._is_open);
+    var section2 = "<div class='storeItems'>"
+    for(let product of this._products){
+      section2 = section2 + visualManager.getConfinedProductDiv(product);
+    }
+    return "<div class='jumbotron store-jumbotron'>" + section1 + section2 + "</div></div>";
 	}
 }

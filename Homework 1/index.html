@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Inventorying Items</title>
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+  <script src="Product.js"></script>
+  <script src="script.js"></script>
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+  <span><h4>Name:</h4><input id="nameInput"></input></span><br>
+  <span><h4>Price:</h4><input id="priceInput"></input></span><br>
+  <div>
+    <h4>Tags:</h4>
+    <input type="checkbox" id="dairyTagCheckbox" name="Dairy"/> Dairy <br>
+    <input type="checkbox" id="wheatTagCheckbox" name="Wheat"/> Wheat <br>
+    <input type="checkbox" id="coldCutsTagCheckbox" name="Cold Cuts"/> Cold Cuts <br>
+    <input type="checkbox" id="fruitsAndVegetablesTagCheckbox" name="Fruits And Vegetables"/> Friuts And Vegetables <br>
+  </div>
+  <div>
+    <h4>Stores:</h4>
+    <input type="checkbox" id="stopAndShopStoreCheckbox" name="Stop And Shop"/> Stop And Shop <br>
+    <input type="checkbox" id="targetStoreCheckbox" name="Target"/> Target <br>
+    <input type="checkbox" id="walmartStoreCheckbox" name="Walmart"/> Walmart <br>
+    <input type="checkbox" id="keyFoodStoreCheckbox" name="Key Food"/> Key Food <br>
+  </div>
+  <button class="btn btn-default" id="submitButton" >Submit</button>
+  <table id="productTable" class="table"></table>
+</body>
+</html>
