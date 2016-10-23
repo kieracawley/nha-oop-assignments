@@ -17,7 +17,7 @@
   <div class="form-box">
     <h1>Create Product</h1>
     Name: <input id="name-input"></input><br>
-    Price: <input id="price-input"></input>
+    Cost In Cents: <input id="price-input"></input>
     <div>
       <h3>Stores:</h3>
       <input type="checkbox" id="Walmart" name="Walmart"/> Walmart <br>
@@ -35,32 +35,43 @@
   <script>
     CB.CloudApp.init("hbyttcwntugz", "e4e91c52-fd9d-4ab0-9d44-3659c5ccbf0f");
 
+    let allProducts = {};
+
     class Product{
       constructor(params){
         this._cloudBoostObject = params
         this._name = params.document.name;
-        this._price = price;
+        this.id = params.id;
+        this._costInCents = params.document.cost_in_cents;
       }
       getListItem(){
-        return `<li>${this.name}: $${this.price}</li>`
+        let cost = (this._costInCents / 100).toString();
+        if (this._costInCents % 100 == 0){
+          cost += ".0";
+        }
+        if (this._costInCents % 10 == 0){
+          cost += "0";
+        }
+        return `<li>${this._name}: $${cost} <button class='deleteButton' id='${this.id}'>Delete</button></li>`
       }
     }
 
     class Store{
       constructor(storeName){
-        this.name = storeName;
-        this.products = [];
+        this._name = storeName;
+        this._products = [];
       }
       listAllProducts(){
-        return this.products;
+        return this._products;
       }
       addProduct(product){
-        this.products.push(product);
+        this._products.push(product);
       }
       updateList(){
-        $(`#${this.name}List`).empty();
-        for(let product of this.products){
-          $(`#${this.name}List`).append(product.getListItem());
+        $(`#${this._name}List`).empty();
+        for(let product of this._products){
+          $(`#${this._name}List`).append(product.getListItem());
+          setupClicks();
         }
       }
     }
@@ -77,19 +88,17 @@
       if (getCheckedStores().length != 0){
         const newProduct = new CB.CloudObject("Product");
         newProduct.set("name", $("#name-input").val());
-        newProduct.set("price", parseFloat($("#price-input").val()));
+        newProduct.set("cost_in_cents", parseFloat($("#price-input").val()));
         newProduct.set("stores", getCheckedStores());
         newProduct.save({
           success: function(newProduct) {
-            const myProduct = new Product(newProduct.document.name, newProduct.document.price);
+            const myProduct = new Product(newProduct);
             for(let storeName of newProduct.document.stores){
-              console.log(storeName);
               stores[storeName].addProduct(myProduct);
               stores[storeName].updateList();
             }
           },
           error: function(err) {
-            console.log(err);
           }
         });
       }
@@ -100,16 +109,14 @@
       query.find({
         success: function(list){
           for(let product of list){
-            const newProduct = new Product(product.document.name, product.document.price);
+            const newProduct = new Product(product);
+            allProducts[`${newProduct.id}`] = newProduct;
             for(let storeName in product.document.stores){
-              const myProduct = new Product(product.document.name, product.document.price);
-              stores[product.document.stores[storeName]].addProduct(myProduct);
-              console.log(myProduct);
+              stores[product.document.stores[storeName]].addProduct(newProduct);
             }
           }
         for(let storeName of storeNames){
           stores[storeName].updateList();
-          console.log(stores[storeName]);
         }
         },
         error: function(err) {
@@ -128,6 +135,30 @@
       return checkedStores;
     }
     getData();
+
+    function setupClicks(){
+      $(".deleteButton").click(function() {
+        const id = this.id;
+        var query = new CB.CloudQuery("Product");
+        query.equalTo('id', id);
+        query.find({
+          success: function(list){
+            for(const item of list){
+              item.delete({
+                success: function(obj) {
+                  location.reload();
+                },
+                error: function(err) {
+                }
+              });
+            }
+          },
+          error: function(err) {
+          }
+        });
+      });
+    }
+
   </script>
 </body>
 </html>
