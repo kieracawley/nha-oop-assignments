@@ -1,0 +1,160 @@
+<html>
+<head>
+  <script src="https://cloudboost.io/js-sdk/cloudboost.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+  <title></title>
+  <style>
+    .form-box{
+      border-style: solid;
+      border-width: 2px;
+      margin-left: 30px;
+      padding: 30px;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h1>Create Product</h1>
+    Name: <input id="name-input"></input><br>
+    Cost In Cents: <input id="price-input"></input>
+    <div>
+      <h3>Stores:</h3>
+      <input type="checkbox" id="Walmart" name="Walmart"/> Walmart <br>
+      <input type="checkbox" id="Target" name="Target"/> Target <br>
+      <input type="checkbox" id="Staples" name="Staples"/> Staples <br>
+    </div><br>
+    <button onclick="createNewProduct()">Submit</button>
+  </div>
+  <h2>Walmart</h2>
+  <ul id="WalmartList"></ul><br>
+  <h2>Target</h2>
+  <ul id="TargetList"></ul><br>
+  <h2>Staples</h2>
+  <ul id="StaplesList"></ul><br>
+  <script>
+    CB.CloudApp.init("hbyttcwntugz", "e4e91c52-fd9d-4ab0-9d44-3659c5ccbf0f");
+
+    class Product{
+      constructor(params) {
+        this._cloudBoostObject = params
+        this._name = params.document.name;
+        this.id = params.id;
+        this._costInCents = params.document.cost_in_cents;
+      }
+      getListItem() {
+        let cost = (this._costInCents / 100).toString();
+        if (this._costInCents % 100 == 0) {
+          cost += ".0";
+        }
+        if (this._costInCents % 10 == 0) {
+          cost += "0";
+        }
+        return `<li>${this._name}: $${cost} <button class='deleteButton' id='${this.id}'>Delete</button></li>`
+      }
+    }
+
+    class Store{
+      constructor(storeName) {
+        this._name = storeName;
+        this._products = [];
+      }
+      listAllProducts() {
+        return this._products;
+      }
+      addProduct(product) {
+        this._products.push(product);
+      }
+      updateList() {
+        $(`#${this._name}List`).empty();
+        for(const product of this._products) {
+          $(`#${this._name}List`).append(product.getListItem());
+          setupClicks();
+        }
+      }
+    }
+
+    const stores = {};
+    const storeNames = ["Walmart", "Target", "Staples"];
+
+    for(const name of storeNames) {
+      const store = new Store(name);
+      stores[name] = store;
+    }
+
+    function createNewProduct() {
+      if (getCheckedStores().length != 0) {
+        const newProduct = new CB.CloudObject("Product");
+        newProduct.set("name", $("#name-input").val());
+        newProduct.set("cost_in_cents", parseFloat($("#price-input").val()));
+        newProduct.set("stores", getCheckedStores());
+        newProduct.save({
+          success: function(newProduct) {
+            const myProduct = new Product(newProduct);
+            for(const storeName of newProduct.document.stores) {
+              stores[storeName].addProduct(myProduct);
+              stores[storeName].updateList();
+            }
+          },
+          error: function(err) {
+          }
+        });
+      }
+    }
+
+    function getData() {
+      const query = new CB.CloudQuery("Product");
+      query.find({
+        success: function(list) {
+          for(const product of list) {
+            const newProduct = new Product(product);
+            for(const storeName in product.document.stores) {
+              stores[product.document.stores[storeName]].addProduct(newProduct);
+            }
+          }
+          for(const storeName of storeNames) {
+            stores[storeName].updateList();
+          }
+        },
+        error: function(err) {
+        }
+      });
+    }
+
+    function getCheckedStores() {
+      const checkedStores = [];
+      for(const storeName of storeNames) {
+        if ($(`#${storeName}`).is(":checked")) {
+          checkedStores.push(storeName);
+        }
+      }
+      return checkedStores;
+    }
+    getData();
+
+    function setupClicks() {
+      $(".deleteButton").click(function() {
+        const id = this.id;
+        const query = new CB.CloudQuery("Product");
+        query.equalTo('id', id);
+        query.find({
+          success: function(list) {
+            for(const item of list) {
+              item.delete({
+                success: function(obj) {
+                  location.reload();
+                },
+                error: function(err) {
+                }
+              });
+            }
+          },
+          error: function(err) {
+          }
+        });
+      });
+    }
+
+  </script>
+</body>
+</html>
