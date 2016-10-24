@@ -2,7 +2,8 @@ class User{
 	constructor(params){
 		this.cloudboostObject = params;
 		this._id = params.id;
-		this._user_name = params.document.username;
-		this.email = params.document.email;
+		this._userName = params.document.username;
+		this._email = params.document.email;
+		this._isStoreOwner = params.document.is_store_owner;
 	}
 }

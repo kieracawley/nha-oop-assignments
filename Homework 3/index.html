@@ -12,29 +12,55 @@
   <script src="CloudObjectManager.js"></script>
   <script src="script.js"></script>
   <script src="ObjectVisualManager.js"></script>
+  <script src="User.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css">
   <title>Stores and Products</title>
 </head>
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <p class="navbar-text" id="pageTitle" href="#">Kiera's Mall</p>
+  <div id="signInPage">
+    <center><h1 class="sectionHeader">Kiera's Mall</h1></center>
+  	<div id="loginPageContent">
+  		<h1>Log In</h1><br>
+  		<input id="logInUsernameInput" class="signUpInput" placeholder="Username"></input><br>
+  		<input id="logInPasswordInput" class="signUpInput" placeholder="Password"></input><br><br>
+  		<p id="logInErrorMessage"></p><br>
+  		<button class="btn btn-default" id="logInButton">Log In</button><br><br>
+  		<h1>Sign Up</h1><br>
+  		<input id="signUpUsernameInput" class="signUpInput"placeholder="Username"></input><br>
+  		<input id="signUpEmailInput" class="signUpInput"placeholder="Email"></input><br>
+  		<input id="signUpPasswordInput" class="signUpInput"placeholder="Password"></input><br>
+  		<input id="signUpPasswordConfirmInput" class="signUpInput"placeholder="Password Confirm"></input><br><br>
+      <input type="radio" name="accountType" value="customer" checked="checked"><span class="radioButtonText"> Customer</span><br>
+  		<input type="radio" name="accountType" value="storeOwner"><span class="radioButtonText"> Store Owner</span><br><br>
+      <div id="signUpStoreForm">
+        <input id="signUpStoreNameInput" class="signUpInput"placeholder="Store Name"></input><br>
+        <input id="signUpStoreImageUrlInput" class="signUpInput"placeholder="Store Image Url"></input><br><br>
+        <div id="signUpStoreIsOpenInput">
+          <input type="radio" name="isOpen" value="customer" checked="checked"><span class="radioButtonText"> Open</span><br>
+    		  <input type="radio" name="isOpen" value="storeOwner"> <span class="radioButtonText">Closed</span><br><br>
+        </div>
       </div>
-        <ul class="nav navbar-nav navbar-right">
-          <li><p class="navbar-text" id="usernameDisplay">Username</p></li>
-          <li><button class="btn" href="#" id="signOutButton">Sign Out</button></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
-  <br><br><br><center><h1 class="sectionHeader">Stores</h1></center><br><br><br>
-  <ul id="stores"></ul>
-  <h2>Add New Product</h2>
-  <input id="newProductName" placeholder="Name"></input>
-  <input id="newProductCost" placeholder="Cost (in cents)"></input>
-  <input id="newProductUrl" placeholder="Image Url"></input>
-  <button id="submitNewProduct" onclick="submitNewProduct()">Submit</button>
-  <ul id="products"></ul>
+  		<p id="signUpErrorMessage"></p><br>
+  		<button class="btn btn-default" id="signUpButton">Sign Up</button><br>
+    </div>
+  </div>
+
+  <div id="mainCustomerPage">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+    	<div class="container-fluid">
+    		<div class="navbar-header">
+    			<p class="navbar-text" id="pageTitle" href="#">Kiera's Mall</p>
+    		</div>
+    		<ul class="nav navbar-nav navbar-right">
+    			<li><p class="navbar-text" id="usernameDisplay">Username</p></li>
+    			<li><button class="btn" href="#" id="signOutButton">Sign Out</button></li>
+    		</ul>
+    	</div>
+    </nav>
+    <br><br><br><center><h1 class="sectionHeader">Stores</h1></center><br><br><br>
+    <div id="stores"></div>
+  </div>
+  <div id="mainStoreOwnerPage">
+  </div>
 </body>
 </html>

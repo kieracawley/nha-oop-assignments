@@ -14,7 +14,7 @@ class ObjectVisualManager{
 		}
 	}
 	getConfinedProductDiv(product){
-		return `<div class='itemDiv'><center> <b>${product._name}: </b>$${this.centsToDollars(product._cost_in_cents)}<br><br><img class='productImage' src='${product._image_url}'></center></div>`;
+		return `<div class='itemDiv'><center> <b>${product._name}: </b>$${this.centsToDollars(product._costInCents)}<br><br><img class='productImage' src='${product._imageUrl}'></center></div>`;
 	}
 	getStoreSummary(name, image, status){
 		const trueFalseToWords = {true: "Open", false: "Closed"};

@@ -1,6 +1,24 @@
 class CloudObjectManager{
 	constructor(){
 	}
+	isValidUser(username, password, callBack){
+		const findUser = new CB.CloudQuery("User");
+		findUser.equalTo('username', username);
+		findUser.equalTo('password', password);
+		findUser.find({
+			success: function(list){
+				if(list.length >= 1){
+					const newUser = new User(list[0]);
+					callBack("", true, newUser);
+				}
+				else{
+					callBack("* Invalid username or password", false, "");
+				}
+			},
+			error: function(err) {
+			}
+		});
+	}
 	createProduct(name, cost, imageUrl){
 		const newProduct = new CB.CloudObject("Product");
 		newProduct.set("name", name);
