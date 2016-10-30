@@ -8,8 +8,13 @@ class CloudObjectManager{
 		findUser.find({
 			success: function(list){
 				if(list.length >= 1){
-					const newUser = new User(list[0]);
-					callBack("", true, newUser);
+					if(list[0].document.is_store_owner){
+						const newUser = new StoreOwner(list[0]);
+						callBack("", true, newUser);
+					} else {
+						const newUser = new Customer(list[0]);
+						callBack("", true, newUser);
+					}
 				}
 				else{
 					callBack("* Invalid username or password", false, "");
@@ -68,14 +73,14 @@ class CloudObjectManager{
 						error: function(err){
 
 						}
-					})
+					});
 				}
 			},
 			error: function(err) {
 			}
 		});
 	}
+	
 	createUser(username, email, password, callBack){
-
 	}
 }

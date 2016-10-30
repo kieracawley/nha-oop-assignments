@@ -45,6 +45,23 @@ $( document ).ready(function() {
 		location.reload();
 	});
 
+	function setUpOnClicks(){
+		$(".postComment").click(function(){
+			const productId = this.id.split("-")[1];
+			if(!($(`#inputComment-${productId}`).val() == "")){
+				var query = new CB.CloudQuery("Product");
+				query.equalTo('id', productId);
+				query.find({
+					success: function(list){
+						user.createComment(list[0], $(`#inputComment-${productId}`).val());
+					},
+					error: function(err) {
+					}
+				});
+			}
+		});
+	}
+
 	function loadMallPage(){
 		if(user == ""){
 			$("#mainCustomerPage").hide();
@@ -62,11 +79,18 @@ $( document ).ready(function() {
 				$("#usernameDisplay").append(user._userName);
 				const allStores = [];
 				productManager.getStores(function(stores){
+					let numberOfStoresAdded = 0;
 					for(let store in stores){
 						productManager.getProductsOfStore(stores[store], function(products){
 							const storeObj = new Store(stores[store], products);
 							allStores.push(storeObj);
-							$("#stores").append(storeObj.getListItem());
+							storeObj.getListItem(function(storeVisual){
+								$("#stores").append(storeVisual);
+								numberOfStoresAdded = numberOfStoresAdded + 1;
+								if (numberOfStoresAdded == stores.length){
+									setUpOnClicks();
+								}
+							});
 						});
 					}
 				});
