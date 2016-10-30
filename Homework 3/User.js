@@ -30,7 +30,8 @@ class Customer extends User{
 }
 
 class StoreOwner extends User{
-	constructor(params){
+	constructor(params, store){
 		super(params);
 	}
+
 }
