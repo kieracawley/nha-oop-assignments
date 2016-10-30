@@ -47,13 +47,16 @@ $( document ).ready(function() {
 
 	function setUpOnClicks(){
 		$(".postComment").click(function(){
-			const productId = this.id.split("-")[1];
-			if(!($(`#inputComment-${productId}`).val() == "")){
+			const storeId = $(this).attr("class").split(' ')[1].split('-')[1];
+			const productId = $(this).attr("class").split(' ')[0].split('-')[1];
+			const comment = $(`#inputComment-${storeId}-${productId}`).val();
+			if(!(comment == "")){
 				var query = new CB.CloudQuery("Product");
 				query.equalTo('id', productId);
 				query.find({
 					success: function(list){
-						user.createComment(list[0], $(`#inputComment-${productId}`).val());
+						console.log(productId);
+						user.createComment(list[0], storeId, comment);
 					},
 					error: function(err) {
 					}

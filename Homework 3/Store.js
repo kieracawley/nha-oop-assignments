@@ -17,7 +17,7 @@ class Store{
     while(x < this._products.length){
       const product = this._products[x];
       x = x + 1;
-      visualManager.getConfinedProductDiv(product, function(result){
+      visualManager.getConfinedProductDiv(product, this.id, function(result){
         section2 = section2 + result;
         numberOfAddedProducts = numberOfAddedProducts + 1;
         if(numberOfAddedProducts == numberOfProducts){

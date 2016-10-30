@@ -1,0 +1,31 @@
+<html>
+<head>
+  <script src="https://cloudboost.io/js-sdk/cloudboost.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+  <script src="Product.js"></script>
+  <script src="Store.js"></script>
+  <script src="script.js"></script>
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+  <title>Homework 2</title>
+</head>
+<body>
+  <div class="form-box">
+    <h1>Create Product</h1>
+    Name: <input id="name-input"></input><br>
+    Cost In Cents: <input id="price-input"></input>
+    <div>
+      <h3>Stores:</h3>
+      <input type="checkbox" id="Walmart" name="Walmart"/> Walmart <br>
+      <input type="checkbox" id="Target" name="Target"/> Target <br>
+      <input type="checkbox" id="Staples" name="Staples"/> Staples <br>
+    </div><br>
+    <button onclick="createNewProduct()">Submit</button>
+  </div>
+  <h2>Walmart</h2>
+  <ul id="WalmartList"></ul><br>
+  <h2>Target</h2>
+  <ul id="TargetList"></ul><br>
+  <h2>Staples</h2>
+  <ul id="StaplesList"></ul><br>
+</body>
+</html>

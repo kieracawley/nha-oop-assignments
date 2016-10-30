@@ -13,11 +13,12 @@ class ObjectVisualManager{
 			return String(value)
 		}
 	}
-	getConfinedProductDiv(product, callBack){
+	getConfinedProductDiv(product, storeId, callBack){
 		this.getComments(product, function(allComments){
+			console.log(storeId);
 			const manager = new ObjectVisualManager();
 			const costInDollars = manager.centsToDollars(product._costInCents);
-			callBack(`<div class='itemDiv' id='${product.id}'><center> <b>${product._name}: </b>$${costInDollars}<br><br><img class='productImage' src='${product._imageUrl}'></center><br><div id='${product.id}comments' style='width:270px; height:175px; overflow-y: auto;'>${allComments}</div><div style="height:20px;"></div><textarea id='inputComment-${product.id}' style='width:270px; height:50px; resize: none; margin-right:20px;'></textarea><br><button id='postComment-${product.id}' class='btn btn-default postComment'>Post</button><br></div>`);
+			callBack(`<div class='itemDiv' id='${product.id}'><center> <b>${product._name}: </b>$${costInDollars}<br><br><img class='productImage' src='${product._imageUrl}'></center><br><div id="${product.id}comments-${storeId}comments" class='${product.id}comments ${storeId}comments' style='width:270px; height:175px; overflow-y: auto;'>${allComments}</div><div style="height:20px;"></div><textarea id="inputComment-${storeId}-${product.id}" style='width:270px; height:50px; resize: none; margin-right:20px;'></textarea><br><button class='postComment-${product.id} postComment-${storeId} btn btn-default postComment'>Post</button><br></div>`);
 		});
 	}
 	getStoreSummary(name, image, status){

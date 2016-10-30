@@ -11,7 +11,7 @@ class Customer extends User{
 	constructor(params){
 		super(params);
 	}
-	createComment(product, comment){
+	createComment(product, storeId, comment){
 		var obj = new CB.CloudObject("Comment");
 		obj.set("comment", comment);
 		obj.set("product_id", product);
@@ -19,9 +19,9 @@ class Customer extends User{
 		obj.save({
 			success: function(obj) {
 				console.log(obj)
-				$(`#${obj.document.product_id.document._id}comments`).append(`<div style="width:250px;"class="individualCommentDisplay"> <b>${obj.document.user_name}:</b> <br> <span style="width:250px; font-size:13px;" class="wrapword">${obj.document.comment}</span> </div><br>`);
-				$(`#inputComment-${obj.document.product_id.document._id}`).val('');
-				$(`#${obj.document.product_id.document._id}comments`).scrollTop($(`#${obj.document.product_id.document._id}comments`)[0].scrollHeight);
+				$(`.${obj.document.product_id.document._id}comments`).append(`<div style="width:250px;"class="individualCommentDisplay"> <b>${obj.document.user_name}:</b> <br> <span style="width:250px; font-size:13px;" class="wrapword">${obj.document.comment}</span> </div><br>`);
+				$(`#inputComment-${storeId}-${obj.document.product_id.document._id}`).val('');
+				$(`#${obj.document.product_id.document._id}comments-${storeId}comments`).scrollTop($(`.${obj.document.product_id.document._id}comments`)[0].scrollHeight);
 			},
 			error: function(err) {
 			}
@@ -32,6 +32,7 @@ class Customer extends User{
 class StoreOwner extends User{
 	constructor(params, store){
 		super(params);
+		this._store = store;
 	}
 
 }
