@@ -37,8 +37,8 @@
         <input id="signUpStoreNameInput" class="signUpInput"placeholder="Store Name"></input><br>
         <input id="signUpStoreImageUrlInput" class="signUpInput"placeholder="Store Image Url"></input><br><br>
         <div id="signUpStoreIsOpenInput">
-          <input type="radio" name="isOpen" value="customer" checked="checked"><span class="radioButtonText"> Open</span><br>
-    		  <input type="radio" name="isOpen" value="storeOwner"> <span class="radioButtonText">Closed</span><br><br>
+          <input type="radio" name="isOpen" value="true" checked="checked"><span class="radioButtonText"> Open</span><br>
+    		  <input type="radio" name="isOpen" value="false"> <span class="radioButtonText">Closed</span><br><br>
         </div>
       </div>
   		<p id="signUpErrorMessage"></p><br>
@@ -63,7 +63,33 @@
   </div>
 
   <div id="mainStoreOwnerPage">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+    	<div class="container-fluid">
+    		<div class="navbar-header">
+    			<p class="navbar-text" id="ownerPageTitle" href="#">Kiera's Mall</p>
+    		</div>
+    		<ul class="nav navbar-nav navbar-right">
+    			<li><p class="navbar-text" id="ownerUsernameDisplay">Username</p></li>
+    			<li><button class="btn" href="#" id="ownerSignOutButton">Sign Out</button></li>
+    		</ul>
+    	</div>
+    </nav>
+    <br><br><br><h1 class="sectionHeader" id="ownerStoreTitle"></h1><img id="ownerStoreImage"></img><br><br><br>
+    <div id="ownerStoreProducts">
+      <center><h1>Your Products</h1></center><br>
+    </div>
+    <div id="ownerAllProducts">
+      <center><h1>Other Products</h1></center><br>
+    </div><br>
+    <div style="height:40px; width:100%; float:left;"></div><br>
+    <div id="productForm">
+      <h1>Create Product</h1><br>
+      <input id="productNameInput" class="signUpInput" placeholder="Name"></input><br>
+      <input id="productImageInput" class="signUpInput" placeholder="Image Url"></input><br>
+      <input id="productCostInput" class="signUpInput" placeholder="Cost In Cents" onkeypress='return event.charCode >= 48 && event.charCode <= 57'></input><br><br>
+      <p id="productErrorMessage"></p><br>
+      <button class="btn btn-default" id="createProductButton">Create</button><br><br>
+    </div>
   </div>
-
 </body>
 </html>

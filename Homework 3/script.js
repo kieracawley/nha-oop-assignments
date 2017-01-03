@@ -18,6 +18,18 @@ $( document ).ready(function() {
     }
 	});
 
+	$("#createProductButton").click(function(){
+		if($("#productNameInput").val() == "" || $("#productImageInput").val() == "" || $("#productCostInput").val() == ""){
+			$("#logInErrorMessage").append("* You must fill in all of the fields.");
+		}
+		else{
+			productManager.createProduct($("#productNameInput").val(), parseInt($("#productCostInput").val()), $("#productImageInput").val(), user._store);
+			$("#productNameInput").value='';
+			$("#productCostInput").value='';
+			$("#productImageInput").value='';
+		}
+	});
+
 	$("#logInButton").click(function() {
 		$("#logInErrorMessage").hide();
 		$("#logInErrorMessage").empty();
@@ -39,9 +51,53 @@ $( document ).ready(function() {
 	});
 
 	$("#signUpButton").click(function() {
+		$("#signUpErrorMessage").hide();
+		$("#signUpErrorMessage").empty();
+		if(($('#signUpPasswordInput').val() != '') && ($('#signUpPasswordConfirmInput').val() != '') && ($('#signUpEmailInput').val() != '') && ($('#signUpUsernameInput').val() != '')){
+			if($('#signUpPasswordInput').val() == $('#signUpPasswordConfirmInput').val()){
+				if($('input[name=accountType]:checked').val() == "storeOwner"){
+					if(($('#signUpStoreNameInput').val() != '') && ($('#signUpStoreImageUrlInput').val() != '')){
+						productManager.createUser($('#signUpUsernameInput').val(), $('#signUpEmailInput').val(), $('#signUpPasswordInput').val(), true, function(success, createdUser){
+							if(success){
+								productManager.createStore($('#signUpStoreNameInput').val(), $('#signUpStoreImageUrlInput').val(), ($('input[name=isOpen]:checked').val() == "true"), function(store){
+									user = new StoreOwner(createdUser, store);
+									productManager.createStoreUserRelation(store.cloudboostObject, createdUser, function(){
+										loadMallPage();
+									})
+								});
+							}
+						});
+					}
+					else{
+						$("#signUpErrorMessage").show();
+						$("#signUpErrorMessage").append("* You must fill in all of the fields.");
+					}
+				}
+				else{
+					productManager.createUser($('#signUpUsernameInput').val(), $('#signUpEmailInput').val(), $('#signUpPasswordInput').val(), false, function(success, createdUser){
+						if(success){
+							user = createdUser;
+							loadMallPage();
+						}
+					});
+				}
+			}
+			else{
+				$("#signUpErrorMessage").show();
+				$("#signUpErrorMessage").append("* Password and password confirm do not match.");
+			}
+		}
+		else{
+			$("#signUpErrorMessage").show();
+			$("#signUpErrorMessage").append("* You must fill in all of the fields.");
+		}
 	});
 
 	$("#signOutButton").click(function() {
+		location.reload();
+	});
+
+	$("#ownerSignOutButton").click(function() {
 		location.reload();
 	});
 
@@ -55,7 +111,6 @@ $( document ).ready(function() {
 				query.equalTo('id', productId);
 				query.find({
 					success: function(list){
-						console.log(productId);
 						user.createComment(list[0], storeId, comment);
 					},
 					error: function(err) {
@@ -72,8 +127,24 @@ $( document ).ready(function() {
 			$("#signInPage").show();
 		}
 		else{
-			if(user._isStoreOwner){
-
+			if(user instanceof StoreOwner){
+				$("#mainCustomerPage").hide();
+				$("#mainStoreOwnerPage").show();
+				$("#signInPage").hide();
+				$("#ownerUsernameDisplay").empty();
+				$("#ownerUsernameDisplay").append(user._userName);
+				$("#ownerStoreTitle").append(user._store._name);
+				$('#ownerStoreImage').attr("src", user._store._imageUrl);
+				productManager.getProductsNotInStore(user._store, function(store, nonStoreProducts){
+					const visualManager = new ObjectVisualManager();
+					for(let storeProduct of store._products){
+						console.log(store._products);
+						visualManager.getRemovableProduct(storeProduct, store);
+					}
+					for(let nonStoreProduct of nonStoreProducts){
+						visualManager.getAddableProduct(nonStoreProduct, store);
+					}
+				});
 			} else {
 				$("#mainCustomerPage").show();
 				$("#mainStoreOwnerPage").hide();

@@ -3,7 +3,7 @@ class Store{
 	  this.id = params.id;
 	  this._name = params.document.name;
 	  this._imageUrl = params.document.image_url;
-	  this._isOpen = params.document.is_opened
+	  this._isOpen = params.document.is_opened;
 	  this.cloudboostObject = params;
     this._products = products;
   }
@@ -14,6 +14,9 @@ class Store{
     var x = 0;
     const numberOfProducts = this._products.length;
     let numberOfAddedProducts = 0
+    if(numberOfAddedProducts == numberOfProducts){
+      callBack("<div class='jumbotron store-jumbotron'>" + section1 + "</div></div>");
+    }
     while(x < this._products.length){
       const product = this._products[x];
       x = x + 1;
